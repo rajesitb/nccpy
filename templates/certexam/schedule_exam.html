@@ -1,0 +1,161 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+
+        <div class="row">
+            <div class="col-md-12 ">
+                <h1 class="text-center mb-5">Schedule C Cert Exam</h1>
+            <p>Data to be filled by CO of Bn</p>
+            <small>This page shows you the cadets in each academic institution
+                 as recorded by you. You can schedule exam for cadets of
+            an institute in one or more batches. The idea is that a batch logs into a common Google Meet and invigilator
+                will observer the students of the batch during the exam.
+                The batch size will depend on the Google Meet capacity for each exam. An optimum size would be
+            10-15 cadets per batch for ease of monitoring by invigilator.</small><br>
+            <small>To start creating batches, record the date and time against an institute. Hit the <i
+                                           class="far fa-save previous"></i> icon. Wait for confirmation popup. To add another batch,
+            hit the <i data-id="{{ forloop.counter }}" id="add_{{ forloop.counter }}"
+                                           class="fas fa-plus "></i> and enter data. </small>
+            <p>The next step is to click the <em><strong><a href="#review">review schedule <i class="fas fa-long-arrow-alt-down"></i></a></strong></em> at the bottom of the table and
+            send emails to your cadets</p>
+                <table class="table table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">School</th>
+                        <th scope="col">Wing</th>
+                        <th scope="col">Cdt Str</th>
+                        <th scope="col">Batch Str</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Add</th>
+                        <th scope="col">Save</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for foo in str %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td id="school_{{ forloop.counter }}">{{ foo.0 }}</td>
+                            <td id="total_str_{{ forloop.counter }}">{{ foo.1 }}</td>
+                            <td id="str_{{ forloop.counter }}">{{ foo.2 }}</td>
+                            <td id="batch_{{ forloop.counter }}">
+                                <ul class="list-unstyled">
+                                    <li><input type="text" class="form-control" value="1" name="batch_str"
+                                               id="id_batch_str_{{ forloop.counter }}"></li>
+                                </ul>
+                            </td>
+                            <td id="exam_date_{{ forloop.counter }}">
+                                <ul class="list-unstyled">
+                                    <li><input type="date" class="form-control" name="exam_date"
+                                               id="id_exam_date_{{ forloop.counter }}"></li>
+                                </ul>
+                            </td>
+                            <td id="exam_from_{{ forloop.counter }}">
+                                <ul class="list-unstyled">
+                                    <li><input type="time" class="form-control" name="exam_time_from"
+                                               id="id_exam_time_from_{{ forloop.counter }}"></li>
+                                </ul>
+                            </td>
+                            <td id="exam_to_{{ forloop.counter }}">
+                                <ul class="list-unstyled">
+                                    <li><input type="time" class="form-control" name="exam_time_to"
+                                               id="id_exam_time_to_{{ forloop.counter }}"></li>
+                                </ul>
+                            </td>
+                            <td id="add_data_{{ forloop.counter }}" class="add-another">
+                                <ul class="list-unstyled">
+                                    <li><i data-id="{{ forloop.counter }}" id="add_{{ forloop.counter }}"
+                                           class="fas fa-plus "></i></li>
+                                </ul>
+
+                            </td>
+                            <td id="save_data_{{ forloop.counter }}" class="save-details">
+                                <ul class="list-unstyled">
+                                    <li><i style="cursor: pointer" data-id="{{ forloop.counter }}" id="save_{{ forloop.counter }}"
+                                           class="far fa-save previous"></i></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <div class="text-center mt-5" id="review">
+                    <a href="{% url 'review-exam-schedule' %}"  id="review_schedule" class="btn btn-primary" >Review Schedule</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+{% endblock content %}
+{% block jquery %}
+    <script>
+        let count = 1;
+        $('.add-another').on('click', '.fa-plus', function () {
+            let id = $(this).data('id');
+            let pk = $(this).attr('id');
+
+            $(`#batch_${id}>ul`).append(`<li class="mt-1"><input type="text" class="form-control mt-1" value="1" name="batch_str" id="id_batch_str_count_${count}"></li>
+        `);
+            $(`#exam_date_${id}>ul`).append(`<li><input type="date" class="form-control mt-1" name="exam_date" id="id_exam_date_count_${count}"></li>
+        `);
+            $(`#exam_from_${id}>ul`).append(` <li><input type="time" class="form-control mt-1" name="exam_time_from" id="id_exam_time_from_count_${count}"></li>
+        `);
+            $(`#exam_to_${id}>ul`).append(`<li><input type="time" class="form-control mt-1" name="exam_time_to" id="id_exam_time_to_count_${count}"></li>
+        `);
+
+            $(`#save_data_${id}>ul`).append(`<li><i data-id=${count} id="save_count_${count}" class="mt-4 far fa-save new"></i></li>
+        `);
+            count += 1;
+        });
+        $('.save-details').on('click', '.previous', function () {
+            let id = $(this).data('id');
+            let saveItem = $(this);
+            $(this).removeClass('far fa-save').addClass('fas fa-spinner fa-spin');
+            let school = $(`#school_${id}`).text();
+            let strength = $(`#str_${id}`).text();
+            let batch = $(`#id_batch_str_${id}`).val();
+            let date = $(`#id_exam_date_${id}`).val();
+            let from_time = $(`#id_exam_time_from_${id}`).val();
+            let to_time = $(`#id_exam_time_to_${id}`).val();
+            $.post({% url 'add-exam-schedule' %}, {
+                'school': school, 'batch': batch, 'strength': strength,
+                'date': date, 'from_time': from_time, 'to_time': to_time
+            }, function (data) {
+                alert(`data added successfully`);
+                saveItem.removeClass('fas fa-spinner fa-spin ').addClass('far fa-save');
+            })
+        });
+        $('.save-details').on('click', '.new', function () {
+            let id = $(this).data('id');
+            let saveItem = $(this);
+            $(this).removeClass('far fa-save').addClass('fas fa-spinner fa-spin');
+            let school = $(`#school_${id}`).text();
+            let batch = $(`#id_batch_str_count_${id}`).val();
+            let strength = $(`#str_${id}`).text();
+            let date_new = $(`#id_exam_date_count_${id}`).val();
+
+            let from_time_new = $(`#id_exam_time_from_count_${id}`).val();
+
+            let to_time_new = $(`#id_exam_time_to_count_${id}`).val();
+
+            $.post({% url 'add-exam-schedule' %}, {
+                'school': school, 'batch': batch, 'strength': strength,
+                'date': date_new, 'from_time': from_time_new, 'to_time': to_time_new
+            }, function (data) {
+                alert(`data added successfully`);
+                saveItem.removeClass('fas fa-spinner fa-spin ').addClass('far fa-save');
+            })
+
+
+        })
+    </script>
+{% endblock jquery %}

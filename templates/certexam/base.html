@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load crispy_forms_tags %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Admin">
+    <meta name="description" content="This app is a comprehensive online test module for conduct of NCC C Cert
+exam online. This will benefit cadets during the current pandemic as they can take the exam from the
+convenience of their homes. The paper will have only multiple choice questions and each cadet will
+be presented with a different set of paper">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>NCC C Cert{% if title %} : {{ title }}{% endif %}</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    {#    Bootstrap icons#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'img/ncc_logo.png' %}" type="img/png">
+
+    <!-- Material Design Bootstrap -->
+    <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://jqueryui.com/jquery-wp-content/themes/jqueryui.com/style.css">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif, 'Lato', sans-serif;
+        }
+    </style>
+    {% block extrahead %}
+    {% endblock extrahead %}
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand mt-2 mt-lg-0 mr-3" href="{% url 'banner' %}">
+                <img class="mr-3"
+                     src="{% static 'img/logo1.png' %}"
+                     height="25"
+                     alt=""
+                     loading="lazy"
+                />NCC
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item" id="home">
+                        <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item dropdown" id="add">
+                            <a class="nav-link dropdown-toggle" href="{% url 'record-unit-data' %}" id="navbarDropdown"
+                               role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Build Database
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'record-unit-data' %}">Your Unit</a>
+                                <a class="dropdown-item" href="{% url 'add-school' %}">Add Institute</a>
+                                <a class="dropdown-item" href="{% url 'add-cadet' %}">Add Cadet</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown" id="schedule">
+                            <a class="nav-link dropdown-toggle" href="{% url 'schedule-exam' %}" id="navbarDropdown"
+                               role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Schedule Exam
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'schedule-exam' %}">Schedule</a>
+                                <a class="dropdown-item" href="{% url 'exam-batch' %}">Email Exam Link</a>
+                                <a class="dropdown-item" href="{% url 'exam-result' %}">Exam Result</a>
+
+                            </div>
+                        </li>
+                        <li class="nav-item" id="cadet">
+                            <a class="nav-link" href="{% url 'cadet-list' %}">Cadets</a>
+                        </li>
+ {% if request.user.is_superuser %}
+                        <li class="nav-item dropdown" id="schema">
+                            <a class="nav-link dropdown-toggle" href="{% url 'paper-schema' %}" id="navbarDropdown"
+                               role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Set Exam
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'paper-schema' %}">Set Schema</a>
+                                <a class="dropdown-item" href="{% url 'show-schema' %}">Review Schema</a>
+                                <a class="dropdown-item" href="{% url 'sample-paper' %}">Sample Paper</a>
+
+                            </div>
+                        </li>
+
+                            <li class="nav-item" id="admin">
+                                <a class="nav-link" href="https://nccexam.herokuapp.com/admin/">Admin</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                {% if request.user.is_anonymous %}
+                    <div class="my-0">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="my-0">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link ml-auto" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+</head>
+<body style="min-height: 100vh">
+{% block content %}
+{% endblock content %}
+<!-- JQuery -->
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+<!--JQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        let pathname = location.pathname;
+        if (pathname.includes('home')) {
+            $('li#home').addClass('active').siblings().removeClass('active');
+        } else if (pathname.includes('add')) {
+
+            $('li#add').addClass('active').siblings().removeClass('active');
+
+        } else if (pathname.includes('schedule')) {
+
+            $('li#schedule').addClass('active').siblings().removeClass('active');
+
+        } else if (pathname.includes('cadet')) {
+            $('li#cadet').addClass('active').siblings().removeClass('active');
+
+        } else if (pathname.includes('schema')) {
+            $('li#schema').addClass('active').siblings().removeClass('active');
+
+        } else if (pathname.includes('exam-result')) {
+            $('li#schedule').addClass('active').siblings().removeClass('active');
+
+        } else if (pathname.includes('sample-paper')) {
+            $('li#schema').addClass('active').siblings().removeClass('active');
+
+        }
+    });
+    $('li').click(function () {
+        $(this).addClass('active').siblings().removeClass('active')
+    });
+    let x = document.referrer
+    console.log(x)
+    let csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    } //func
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    }); //setup
+    {#<!--    setup done Ajax-->#}
+</script>
+{% block jquery %}
+{% endblock jquery %}
+<!--Footer-->
+<footer class="page-footer text-center font-small navbar-dark bg-dark  mt-0 wow fadeIn">
+
+    <!--Call to action-->
+
+    <!--/.Call to action-->
+
+    <hr class="my-4">
+
+    <!-- Social icons -->
+    <div class="container">
+        <div class="pb-1 row">
+
+
+        </div>
+    </div>
+
+    <!-- Social icons -->
+    <div class="container p-4 pt-1">
+        <!-- Section: Social media -->
+        <section class="mb-4">
+
+        </section>
+    </div>
+
+    <!--Copyright-->
+    <div class="footer-copyright py-3">
+        © 2021 Copyright:
+        <a href="" target="_blank">NCC C Cert </a>
+    </div>
+    <!--/.Copyright-->
+
+</footer>
+<!--/.Footer-->
+</body>
+</html>

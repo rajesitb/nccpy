@@ -1,0 +1,167 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+        <div class="row">
+            <div class="col-md-12 ">
+                <h1 class="text-center mb-5">Review C Cert Exam Schedule</h1>
+            <small>You can review, delete a batch and send info mail to you cadets in a batch
+                regarding the scheduled exam. The text of the mail can also be seen and edited </small>
+                <table class="table table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">Date</th>
+
+                        <th scope="col">School</th>
+                        <th scope="col">Total Str</th>
+                        <th scope="col">Batch Str <br> <small>Click and change to edit</small></th>
+                        <th scope="col">From <br> <small>Click and change to edit</small></th>
+                        <th scope="col">To <br> <small>Click and change to edit</small></th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Email Text</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for foo in school_date %}
+                        {% for item in foo.3 %}
+                            <tr>
+                                {% if forloop.first %}
+                                    <td{% if forloop.first %}
+                                        rowspan="{{ foo.2 }}"{% endif %}>{{ foo.0 }}</td>{% endif %}
+                                {% if forloop.first %}
+                                    <td{% if forloop.first %}
+                                        rowspan="{{ foo.2 }}"{% endif %}>{{ foo.1|title }}</td>{% endif %}
+
+                                {% if forloop.first %}
+                                    <td{% if forloop.first %}
+                                        rowspan="{{ foo.2 }}"{% endif %}>{{ item.strength }}</td>{% endif %}
+                                <td contenteditable="true" class="data-change" data-type="batch" data-id="{{ item.id }}">
+                                    {{ item.batch }}
+                                    </td>
+                                <td class="data-change" data-type="from_time" data-id="{{ item.id }}">
+                                    <input type="time" value="{{ item.from_time|time:"H:i" }}">
+                                </td>
+                                <td class="data-change" data-type="to" data-id="{{ item.id }}">
+                                    <input type="time" value="{{ item.to|time:"H:i" }}">
+
+                                </td>
+
+                                <td><button data-id="{{ item.id }}" type="button" class="btn btn-sm btn-primary send-email"
+                                            style="border-radius: 15px" {% if item.mail_sent %} disabled {% endif %} >
+                                    <i class="bi bi-envelope"></i> {% if not item.mail_sent %}Send Email {% else %} Mail Sent {% endif %}
+                                </button></td>
+
+                            <td><button data-id="{{ item.id }}" type="button" data-toggle="modal" data-target="#emailModal"  class="btn btn-sm btn-secondary"
+                                        style="border-radius: 15px">
+                                <i class="bi bi-journal-richtext"></i>
+                                Email Text</button>
+                            <p>
+                                <a data-toggle="modal" data-id="{{ item.id }}" data-target="#removeModal" style="border-radius: 15px" href="" class="ml-3 btn btn-danger btn-sm">remove</a>
+
+                            </p></td>
+
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Email Text</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <label for="id-email-text">Email Text</label>
+          <textarea name="email-text" id="id-email-text" cols="30" rows="10"  class="form-control">
+              We are announcing the conduct of NCC C cert exam for you at the specified date and time.
+              The exam will be conducted online. You can use your laptop or smart phone for the exam. Ensure
+              uninterrupted internet connectivity during the exam period. During the exam you will have to login in to
+              a Google Meet, the id for which we shall share with you later. So your front camera will be on through out the test.
+              You will be required to answer an objective type question paper for which you will get a link in an email later.
+              On clicking the link your question paper will be opened in the browser. You can answer in the given time only.
+          </textarea>
+          <small>Enter / Edit text to be sent to cadets. Date and time not to be included</small>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- removeModal -->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Remove Batch</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form action="" method="post">{% csrf_token %}
+      <div class="modal-body">
+          <p>Are your sure ?</p>
+          <input type="text" class="remove-batch" hidden>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="id_remove_batch" class="btn btn-danger">Remove</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+    {% csrf_token %}
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('#removeModal').on('show.bs.modal', function (e) {
+        let data = e.relatedTarget.dataset['id']
+        $('#id_remove_batch').click(function () {
+            $.post({% url 'remove-batch' %}, {data}, function (){
+                location.reload();
+            })
+        })
+    });
+    $('.data-change').focusout(function () {
+        let input = $(this);
+        let type = $(this).data('type');
+        let id = $(this).data('id');
+        let value ;
+        !$(this).children()[0] ?  value = $(this).text().trim(' '): value = input.children()[0].value;
+        $.post({% url 'edit-exam-schedule' %}, {type, id, value}, function (data) {
+            
+        })
+    });
+    $('.send-email').click(function () {
+        let btn = $(this);
+        $(this).html(`<i class="fas ml-1 pl-1 pr-1 mr-1 fa-sync fa-spin"></i>`);
+        let id = $(this).data('id');
+        let msg = $('#id-email-text').val();
+        $.post({% url 'send-mail-cadets' %}, {id, msg}, function (data) {
+            btn.html(`<i class="bi bi-envelope"></i> Email Sent`);
+            alert(`mail sent to ${data['response']} cadets`);
+        })
+    })
+    </script>
+{% endblock jquery %}

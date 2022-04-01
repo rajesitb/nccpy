@@ -1,0 +1,73 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+    <style>
+    tr td input {
+        width: 90%;
+    }
+    </style>
+{% endblock extrahead %}
+{% block content %}
+
+    <div class="container-fluid" style="min-height: 70vh">
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="text-center">Add Cadet</h1>
+    </div>
+</div>
+        <div class="row">
+            <div class="col-md-12 ">
+
+                    <table class="table table-sm table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+                        <th >Fist Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">DOB</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Number</th>
+                        <th scope="col">Institute</th>
+                        <th scope="col">Standard</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Mobile</th>
+
+                        <th scope="col">Save</th>
+                    </tr>
+                    </thead>
+                    <tbody class="add-row">
+
+                        <tr>
+                            <form action="" method="post">{% csrf_token %}
+                            <td >{{ form.first_name }}</td>
+                            <td >{{ form.sec_name }}</td>
+                            <td >{{ form.dob }}</td>
+                            <td >{{ form.gender }}</td>
+                            <td >{{ form.number }}</td>
+                            <td >{{ form.school }}</td>
+                            <td >{{ form.standard }}</td>
+                            <td >{{ form.email }}</td>
+                            <td >{{ form.mobile }}</td>
+
+                            <td > <input type="submit" style="padding:0 5px" ></td>
+                            </form>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'cadet-list' %}" class="btn btn-sm btn-secondary">cadet list</a>
+        </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block jquery %}
+    <script>
+$('#id_dob').attr('type', 'date')
+    </script>
+{% endblock %}

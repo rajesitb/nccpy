@@ -1,0 +1,26 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+    <div class="row">
+            <div class="col-md-6 offset-md-3 mt-5">
+                <h4 class="text-center">Update Cadet</h4>
+                <form action="" method="post">
+                    {% csrf_token %}
+
+                {{ form|crispy }}
+                    <input type="submit" class="btn btn-success" value="update">
+                </form>
+            </div>
+    </div>
+    </div>
+{% endblock %}
+{% block jquery %}
+    <script>
+    $('#id_dob').attr('type', 'date')
+    </script>
+{% endblock jquery %}

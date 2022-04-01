@@ -1,0 +1,70 @@
+{% extends 'online_exam/base.html' %}
+{% load static %}
+{% block extrahead %}
+    <style>
+        header h1 {
+            text-align: center;
+
+            text-transform: uppercase;
+            margin-top: 20px;
+            background-color: #4d4d4d;
+            color: #cccccc;
+            padding: 20px;
+        }
+
+    </style>
+{% endblock extrahead %}
+{% block content %}
+
+    <header>
+        <h1><img src="{% static  'img/logo1.png' %}" height="50" alt="">
+            ncc c cert online exam
+        </h1>
+        <h4 id="para" onclick="RightMouseDown()">hi there</h4>
+    </header>
+
+{% endblock content %}
+{% block jquery %}
+    <script>
+        $(document).ready(function () {
+
+            $('#para').text('hello guys')
+        });
+        window.addEventListener('contextmenu', function (e) {
+            alert('Right click prevented');
+            e.preventDefault();
+        }, false);
+
+        document.oncontextmenu = RightMouseDown;
+        document.onmousedown = mouseDown;
+
+        function mouseDown(e) {
+            console.log('hello')
+            if (e.which == 3) {//rightClick
+                alert("Disabled - do whatever you like here..");
+            }
+        }
+
+        function RightMouseDown() {
+            return false;
+        }
+        mouseDown();
+        RightMouseDown();
+
+        /* Get the documentElement (<html>) to display the page in fullscreen */
+        let elem = document.documentElement;
+
+        /* View in fullscreen */
+        {#function openFullscreen() {#}
+        {#    if (elem.requestFullscreen) {#}
+        {#        elem.requestFullscreen();#}
+        {#    } else if (elem.webkitRequestFullscreen) { /* Safari */#}
+        {#        elem.webkitRequestFullscreen();#}
+        {#    } else if (elem.msRequestFullscreen) { /* IE11 */#}
+        {#        elem.msRequestFullscreen();#}
+        //}
+        //}
+        {#openFullscreen();#}
+
+
+{% endblock jquery %}

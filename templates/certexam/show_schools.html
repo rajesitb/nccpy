@@ -1,0 +1,81 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="text-center">Review Institutes</h1>
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+
+                <table class="table table-striped mb-5 border">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">Name</th>
+                        <th scope="col">Wing</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for school in schools %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ school.school|title }}</td>
+                            <td>{{ school.wing }}</td>
+                            <td><a href="{% url 'update-school' school.id %}" class="btn btn-sm btn-success">edit</a></td>
+                            <td><a data-toggle="modal" data-id="{{ school.id }}" data-target="#removeModal" style="border-radius: 15px" href="" class="ml-3 btn btn-danger btn-sm">remove</a></td>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        <!-- removeModal -->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Remove Institute</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form action="" method="post">{% csrf_token %}
+      <div class="modal-body">
+          <p>Are your sure ?</p>
+          <p>All cadet records and exam batches, if any, of the institute will be deleted too!</p>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="id_remove_school" class="btn btn-danger">Remove</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('#removeModal').on('show.bs.modal', function (e) {
+        let data = e.relatedTarget.dataset['id'];
+        $('#id_remove_school').click(function () {
+            $.post({% url 'remove-school' %}, {data}, function (){
+                location.reload();
+            })
+        })
+    });
+    </script>
+
+{% endblock jquery%}

@@ -1,0 +1,163 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% block extrahead %}
+    <style>
+
+    </style>
+{% endblock extrahead %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-md-12 mb-5">
+            <h1 class="text-center grey-text">Prepare Test Schema</h1>
+        </div>
+    </div>
+        {% for wing in wings %}
+            <div class="row">
+                <div class="col-md-10 offset-md-1 text-center">
+                    <h1 class="ncc-wing">{{ wing }}</h1></div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12 ">
+                    <h6>
+                        <ul class="list-unstyled">
+                            {% if wing == 'Army' %}
+                                {% for item in army_sub_qp %}
+                                    <div class="row border-bottom mb-3">
+                                        <div class="col-md-2">
+                                            <li>Subject: <span data-wing="{{ wing }}" class="subject" style="font-weight: 600">{{ item.0 }}</span></li>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <li>Total Questions: <span class="total-questions"
+                                                    style="font-weight: 600">{{ item.1|length }}</span></li>
+                                        </div>
+                                        <div class="col-md-2 div-allotted">
+                                            <li>Ques allotted: <input style="width: 100%" class="allotted" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-marks">
+                                            <li>Marks per question: <input style="width: 100%" class="marks" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-marks">
+                                            <li>Pass Percentage: <input style="width: 100%" value="40" class="pass_percentage" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-total">
+                                            <li class="total">Total Marks :</li>
+                                            <li><button class="add-data btn btn-sm btn-secondary">add</button></li>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% elif wing == 'Navy' %}
+                                {% for item in navy_sub_qp %}
+                                    <div class="row border-bottom mb-3">
+                                        <div class="col-md-2">
+                                            <li>Subject: <span data-wing="{{ wing }}" class="subject" style="font-weight: 600">{{ item.0 }}</span></li>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <li>Total Questions: <span class="total-questions"
+                                                    style="font-weight: 600">{{ item.1|length }}</span></li>
+                                        </div>
+                                        <div class="col-md-2 div-allotted">
+                                            <li>Ques allotted: <input style="width: 100%" class="allotted" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-marks">
+                                            <li>Marks per question: <input style="width: 100%" class="marks" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-marks">
+                                            <li>Pass Percentage: <input style="width: 100%" value="40" class="pass_percentage" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-total">
+                                            <li class="total">Total Marks :</li>
+                                            <li><button class="add-data btn btn-sm btn-secondary">add</button></li>
+                                        </div>
+
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                {% for item in af_sub_qp %}
+                                    <div class="row border-bottom mb-3">
+                                        <div class="col-md-2 ">
+                                            <li>Subject: <span data-wing="{{ wing }}" class="subject" style="font-weight: 600">{{ item.0 }}</span></li>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <li>Total Questions: <span class="total-questions"
+                                                    style="font-weight: 600">{{ item.1|length }}</span></li>
+                                        </div>
+                                        <div class="col-md-2 div-allotted">
+                                            <li>Ques allotted: <input style="width: 100%" class="allotted" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-marks">
+                                            <li>Marks per question: <input style="width: 100%" class="marks" type="text"></li>
+                                        </div>
+                                        <div class="col-md-2 div-marks">
+                                            <li>Pass Percentage: <input style="width: 100%" value="40" class="pass_percentage" type="text"></li>
+                                        </div>
+
+                                        <div class="col-md-2 div-total">
+                                            <li class="total">Total Marks :</li>
+                                            <li><button class="add-data btn btn-sm btn-secondary">add</button></li>
+                                        </div>
+
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </h6>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% csrf_token %}
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('button').each(function () {
+        $(this).prop({disabled: true})
+
+    });
+        $('.marks, .allotted').change(function () {
+            let parentDiv = $(this).parent().parent();
+            let grandParentDiv = $(this).parent().parent().parent();
+
+
+            let marks = grandParentDiv.find('input.marks').val();
+            let allotted = grandParentDiv.find('input.allotted').val();
+            let pass_percentage = grandParentDiv.find('input.pass_percentage').val();
+            let multiplied = parseInt(marks) * parseInt(allotted);
+            let subject = grandParentDiv.find('span.subject').text();
+            let wing = grandParentDiv.find('span.subject').data('wing');
+            let totalQuestions = grandParentDiv.find('span.total-questions').text();
+            let button = grandParentDiv.find('button');
+
+            let total = grandParentDiv.find('li.total').html(`Total Marks : <span data-wing="${wing}"
+data-subject="${subject}" data-allotted="${allotted}" data-marks="${marks}" data-pass_percentage="${pass_percentage}"
+                                                    style="font-weight: 600">${multiplied}</span>`);
+            isNaN(multiplied)? button.prop({disabled: true}): button.prop({disabled: false});
+
+
+            {#console.log(marks, allotted, subject, totalQuestions, multiplied, wing, button);#}
+            {#button.click(function () {#}
+            {#    let dataOne = grandParentDiv.find('input.allotted').val();#}
+            {#    let dataTwo = grandParentDiv.find('input.marks').val();#}
+            {##}
+
+
+            {#let total = $(this).parent();#}
+            {#console.log(total);#}
+            {#console.log(total[0].parentElement.parentElement.lastElementChild.textContent = '5')#}
+        });
+        $('button').click(function () {
+            let btn = $(this);
+            $(this).html(`<i class="fas ml-1 pl-1 pr-1 mr-1 fa-sync fa-spin"></i>`);
+            let el = $(this).parent().parent().find('.total').children()[0].dataset;
+            let data = {...el};
+             $.post({% url 'record-schema'%}, data, function (){
+                  btn.html(`<i class="bi bi-envelope"></i> added`);
+                 alert(`data recorded`)
+             })
+
+        })
+
+    </script>
+{% endblock jquery %}

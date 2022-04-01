@@ -1,0 +1,178 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% block extrahead %}
+    <style>
+
+    </style>
+{% endblock extrahead %}
+{% block content %}
+
+    <div class="container-fluid" style="min-height: 80vh">
+        <div class="row">
+            <div class="col-md-12 mb-5">
+                <h1 class="text-center grey-text">Review Test Schema</h1>
+                <p class="text-center grey-text">Review the schema, edit fields as needed. Fields will be auto saved</p>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-12">
+
+                <h1 class="text-center">{{ army_schema.0.wing }} <span
+                        style="font-size: 1.5rem">Total Marks: {{ army_total }}</span></h1>
+            </div>
+        </div>
+        <ul class="list-unstyled">
+            {% for foo in army_schema %}
+                <div class="row offset-md-2 border-bottom pb-1">
+                    <div class="col-md-3">
+
+                        <li>Subject: <span class="subject" style="font-weight: 600">{{ foo.subject }}</span></li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>No of questions: <span class="total-questions"
+                                                   style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="questions"
+                                                                                   value="{{ foo.questions }}"
+                                                                                   style="width: 100%;" name="questions"
+                                                                                   id="id_questions_{{ forloop.counter }}"></span>
+                        </li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Marks per Question: <span
+                                style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="marks"
+                                                                value="{{ foo.marks }}" style="width: 100%;"
+                                                                name="marks" id="id_marks_{{ forloop.counter }}"></span>
+                        </li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Pass Percentage: <span
+                                style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="pass_percentage"
+                                                                value="{{ foo.pass_percentage }}"
+                                                                style="width: 100%;" name="pass"
+                                                                id="id_pass_{{ forloop.counter }}"></span></li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Total Marks: <span
+                                style="font-weight: 600">{{ foo.get_total }}</span></li>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </ul>
+        <div class="row mb-5">
+            <div class="col-md-12">
+
+                <h1 class="text-center">{{ navy_schema.0.wing }} <span
+                        style="font-size: 1.5rem">Total Marks: {{ navy_total }}</span></h1>
+            </div>
+        </div>
+        <ul class="list-unstyled">
+            {% for foo in navy_schema %}
+                <div class="row offset-md-2 border-bottom pb-1">
+                    <div class="col-md-3">
+
+                        <li>Subject: <span class="subject" style="font-weight: 600">{{ foo.subject }}</span></li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>No of questions: <span class="total-questions"
+                                                   style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="questions"
+                                                                                   value="{{ foo.questions }}"
+                                                                                   style="width: 100%;" name="questions"
+                                                                                   id="id_questions_{{ forloop.counter }}"></span>
+                        </li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Marks per Question: <span
+                                style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="marks"
+                                                                value="{{ foo.marks }}" style="width: 100%;"
+                                                                name="marks" id="id_marks_{{ forloop.counter }}"></span>
+                        </li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Pass Percentage: <span
+                                style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="pass_percentage"
+                                                                value="{{ foo.pass_percentage }}"
+                                                                style="width: 100%;" name="pass"
+                                                                id="id_pass_{{ forloop.counter }}"></span></li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Total Marks: <span
+                                style="font-weight: 600">{{ foo.get_total }}</span></li>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </ul>
+        <div class="row mb-5">
+            <div class="col-md-12">
+
+                <h1 class="text-center">{{ af_schema.0.wing }} <span
+                        style="font-size: 1.5rem">Total Marks: {{ af_total }}</span></h1>
+            </div>
+        </div>
+        <ul class="list-unstyled">
+            {% for foo in af_schema %}
+                <div class="row offset-md-2 border-bottom pb-1">
+                    <div class="col-md-3">
+
+                        <li>Subject: <span class="subject" style="font-weight: 600">{{ foo.subject }}</span></li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>No of questions: <span class="total-questions"
+                                                   style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="questions"
+                                                                                   value="{{ foo.questions }}"
+                                                                                   style="width: 100%;" name="questions"
+                                                                                   id="id_questions_{{ forloop.counter }}"></span>
+                        </li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Marks per Question: <span
+                                style="font-weight: 600"><input type="text" data-id="{{ foo.id }}" data-fd="marks"
+                                                                value="{{ foo.marks }}" style="width: 100%;"
+                                                                name="marks" id="id_marks_{{ forloop.counter }}"></span>
+                        </li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Pass Percentage: <span
+                                style="font-weight: 600"><input type="text"  data-id="{{ foo.id }}" data-fd="pass_percentage"
+                                                                value="{{ foo.pass_percentage }}"
+                                                                style="width: 100%;" name="pass"
+                                                                id="id_pass_{{ forloop.counter }}"></span></li>
+                    </div>
+                    <div class="col-md-2">
+
+                        <li>Total Marks: <span
+                                style="font-weight: 600">{{ foo.get_total }}</span></li>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </ul>
+    </div>
+    {% csrf_token %}
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('input').focusout(function () {
+        let val = $(this).val();
+        let data = $(this)[0].dataset;
+        let el = {...data};
+        let new_el = JSON.stringify(el);
+        $.post({% url 'amend-schema-field' %}, {val, new_el}, function () {
+            alert('data updated');
+            location.reload();
+
+        });
+    })
+    </script>
+{% endblock %}

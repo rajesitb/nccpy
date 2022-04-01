@@ -1,0 +1,131 @@
+
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+        <div class="row">
+            <div class="col-12 mt-5 mb-5">
+                <h1 class="text-center">Review Batch Details and Send Emails</h1>
+                <small><strong>Guidelines</strong>: This page shows the summary of batches made by you and <strong>to whom you
+                    have sent initial emails
+                    regarding scheduling of their NCC C Cert Exam.</strong> Now you have to inform them of the Google Meet Id for
+                    Cadets to
+                    join the meet prior to clicking their exam link which will be sent along with this email to each
+                    cadet in a batch.
+                    The appointed invigilating offr for the batch will also join the meet and observe the cadets as they
+                    take
+                    their exam. <br>
+                    The block time for each batch specifies the time for which the exam link being sent to each cadet in
+                    a batch will
+                    remain live. After the block time is over the link will expire. It should begin before the Exam
+                    start time and finish
+                    after the Exam finish time. EG <em>exam From time: 10.00 am. exam To time: 11 am. </em>. Exam
+                    duration: From 9.00 am To
+                    12.00 pm</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <table class="table table-striped mb-5 border table-responsive-lg   ">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">School</th>
+                        <th scope="col">Total Str</th>
+                        <th scope="col">Batch Str</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Google Meet ID</th>
+                        <th scope="col" colspan="2">Exam Duration
+                            <small>(From - To in clock hours) </small></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for batch in batches %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ batch.school }}</td>
+                            <td>{{ batch.strength }}</td>
+                            <td>{{ batch.batch }}</td>
+                            <td>{{ batch.date }}</td>
+                            <td>{{ batch.from_time }}</td>
+                            <td>{{ batch.to }}</td>
+                            <td><label for="id_meet_{{ forloop.counter }}"></label><input data-id="{{ batch.id }}" type="text" class="meet"
+                                                                                          id="id_meet_{{ forloop.counter }}">
+                            </td>
+                            <td><label for="id_duration_from_{{ forloop.counter }}"></label><input type="datetime-local" data-id="{{ batch.id }}" class="duration-from"
+                                                                             id="id_duration_from_{{ forloop.counter }}"></td>
+                            <td><label for="id_duration_to_{{ forloop.counter }}"></label><input type="datetime-local" data-id="{{ batch.id }}" class="duration-to"
+                                                                           id="id_duration_to_{{ forloop.counter }}"></td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    <li>
+
+                                        <button data-id="{{ batch.id }}" class="btn btn-sm btn-primary">send mail
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'batch-student-list' batch.id %}" class="btn btn-success btn-sm">
+                                        Student List</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('button.btn-primary').each(function () {
+        $(this).prop({disabled: true})
+    });
+    $('.meet').change(function () {
+        let data = $(this).val();
+        let batch = $(this).data('id');
+        console.log(data, batch);
+        $.post({% url 'add-batch-data' %}, {data, batch}, function (data) {
+            alert('data added')
+        })
+    });
+        $('.duration-from').focusout(function () {
+        let from_time = $(this).val();
+        let batch = $(this).data('id');
+        console.log(from_time, batch);
+        $.post({% url 'add-batch-data' %}, {from_time, batch}, function (data) {
+            alert('data added')
+        })
+    });
+            $('.duration-to').focusout(function () {
+        let to_time = $(this).val();
+        let batch = $(this).data('id');
+        console.log(to_time, batch);
+        $.post({% url 'add-batch-data' %}, {to_time, batch}, function (data) {
+            alert('data added');
+            $(`button[data-id=${batch}]`).prop({disabled: false});
+        })
+    });
+        $('.btn-primary').click(function () {
+            let btn = $(this);
+            $(this).html(`<i class="fas ml-1 pl-1 pr-1 mr-1 fa-sync fa-spin"></i>`);
+            let id = $(this).data('id');
+            $.post({% url 'send-exam-mail-cadets' %}, {id}, function (data) {
+                btn.html(`<i class="bi bi-envelope"></i> Email Sent`);
+            alert(`mail sent to ${data['response']} cadets`);
+            });
+        })
+    </script>
+{% endblock %}

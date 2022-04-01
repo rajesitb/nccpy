@@ -1,0 +1,44 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+            {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                    <li class="{{ message.tags }} bg-warning text-white">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    <div class="row">
+        <div class="col-md-6 offset-md-3 mt-5">
+        <h1 class="text-center">Select / Edit Unit</h1>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="text-center">
+
+                <input type="submit" class="btn btn-success">
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('#id_group').change(function (){
+        let group = $(this).val();
+        $.post({% url 'get-units' %}, {'group':group}, function (data){
+            let result = data['response'];
+            $('#id_battalion').empty('option');
+            $.each(result, function (i, v){
+                $('#id_battalion').append(`
+                <option value="${v[0]}">${v[1]}</option>
+                `)
+            })
+        })
+    })
+    </script>
+
+{% endblock jquery%}

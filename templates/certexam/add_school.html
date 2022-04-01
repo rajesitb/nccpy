@@ -1,0 +1,62 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+    <div class="row mt-5">
+        <div class="coi-6 offset-md-3">
+            <h5>Click on Save icon <i class="far fa-save ml-1"></i> to save the institute. To add more institutes, click on <i class="fas fa-plus ml-1"></i></h5>
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="text-center mb-5">Add Institute</h1>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div id="div_id_school" class="form-group">
+                        <label for="id_school" class=" requiredField">
+                        Institute<span class="asteriskField">*</span>
+                        </label>
+                        <div class="d-inline"><input type="text" name="school" maxlength="150"
+                                             class="d-inline form-control" style="width: 50%" required id="id_school">
+                        </div>
+                        <i class="fas fa-plus ml-5" title="Add another Institute"></i>
+                        <i data-id="id_school" class="far fa-save ml-5" title="Save"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3 text-center">
+            <a href="{% url 'show-institutes' %}" class="btn btn-elegant">review institutes</a>
+
+        </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block jquery %}
+    <script>
+    let count = 1;
+        $('#div_id_school').on('click', '.fa-plus',function (){
+            $('#div_id_school').append(`<br>
+             <label for="id_school_${count}" class="mt-5">
+                        Institute<span class="asteriskField">*</span>
+                    </label>
+                        <div class="d-inline"><input type="text" name="school" maxlength="150"
+                                             class="d-inline form-control" style="width: 50%"
+                        required id="id_school_${count}">
+                        </div><i class="fas fa-plus ml-5"></i><i data-id="id_school_${count}" class="far fa-save ml-5"></i>
+
+            `);
+            count += 1
+        });
+    $('#div_id_school').on('click', '.fa-save', function (){
+        let id = $(this).data('id');
+        let input = $(`input#${id}`).val();
+        $.post({% url 'add-school' %}, {input}, function (data){
+            alert(`${data['response']} added successfully`)
+        })
+    })
+    </script>
+
+{% endblock jquery %}

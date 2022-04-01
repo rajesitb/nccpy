@@ -1,0 +1,66 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+    <style>
+    p{
+        font-size: 1.2rem;
+        line-height: 2rem;
+    }
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+     {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                    <li class="{{ message.tags }} bg-warning text-white">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h1 style="text-align: center">NCC C Cert Online Exam Management Module</h1>
+            <h4 style="text-align: center" class="mb-5">Developed by NER Dte NCC</h4>
+            <p class="mt-5">This module is designed to hold NCC C Cert Exam online for cadets. The CO of a unit will plan the
+            exam and schedule the exam for his cadets using this module. He can inform the cadets about their
+            exam schedule by an email. </p>
+            <p>On the appointed day the CO will send an email link for the exam paper and a Google meet Link
+            to the affected candidates. The link will be functional as per the schedule fixed by the CO.
+            At the appointed time the candidate will activate his Google meet and the appointed invigilator
+            can see live stream of his candidate. The candidate can now click on the exam link received in his
+            email and commence answering the paper.</p>
+            <p>Following steps are involved for a CO:</p>
+            <ul>
+                <li>
+                    <p>Register on the site <a href="{% url 'register' %}">here</a></p>
+                </li>
+                <li>
+                    <p><a href="{% url 'login' %}">Login</a></p>
+                </li>
+                <li>
+                    <p><a href="{% url 'record-unit-data' %}">Record</a> unit data</p>
+                </li>
+                <li>
+                    <p>Add <a href="{% url 'add-school' %}">Institutes</a> and
+                        <a href="{% url 'add-cadet' %}">Cadets</a> affected for NCC C Cert Exam</p>
+                </li>
+                <li>
+                    <p>Divide cadets in unit wise <a href="{% url 'review-exam-schedule' %}">batches</a> for ease of conduct and invigilation. Review the
+                    batches and send email to cadets informing them of the schedule</p>
+                </li>
+                <li>
+                    <p>Send Google meet id and <a href="{% url 'exam-batch' %}">exam link</a> with time bracket for which the link will be valid</p>
+                </li>
+            </ul>
+
+
+            <p>After conduct of exam is over, the results obtained by cadets can be viewed and printed</p>
+            <p>Question bank database and exam schema will be prepared by the Dte.</p>
+            <p>To practice the candidate, a sample paper will be available which can be sent to candidates for them to
+            familiarize with the exam app.</p>
+
+        </div>
+    </div>
+    </div>
+{% endblock content %}

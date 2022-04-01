@@ -1,0 +1,203 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center mt-5 mb-5"><img src="{% static 'img/ncc_logo.png' %}" height="50" alt="logo"> NCC
+                    C Cert Exam Results</h1>
+                <h4>Wing: {{ army.2 }}</h4>
+                {#            {{ army }} <br>#}
+                {#            {% for k, v in army.0.items %}{{ k }}#}
+                {#                {{ v }} <br>#}
+                {#                {% for a, b in v.items %}#}
+                {#                    {{ a }} {{ b }} <br>#}
+                {#                    {% for c, d in b.items %}#}
+                {#                    {{ c.first_name }} {{ d.4 }}#}
+                {#                    {% endfor %}#}
+                {#                {% endfor %}#}
+                {#            {% endfor %}#}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">School</th>
+                        <th scope="col">Name</th>
+                        {% for subject in army.1 %}
+                            <th scope="col">{{ subject.0 }} <br>
+                                <span class="small text-muted">Max Marks: {{ subject.1 }} <br>
+                        Pass Marks: {{ subject.2 }}</span></th>
+                        {% endfor %}
+                        <th scope="col">Total Marks</th>
+
+                        <th scope="col">Marks Obtained</th>
+                        <th scope="col">Result</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for k, v in army.0.items %}
+                        {% for a, b in v.items %}
+                            {% for c, d in b.items %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ c.school }}</td>
+                                    <td><a href="{% url 'detailed-result' c.id %}">{{ c.first_name }} {{ c.sec_name }}</a></td>
+                                    {% for item in d.4 %}
+                                        <td>
+                                            Mks obtained: {{ item.3 }} <br>Result: {% if item.4 == 'Pass' %}
+                                            <span style="background-color: lightgreen">{{ item.4 }}</span>
+                                        {% else %}
+                                            <span style="background-color: lightcoral;">{{ item.4 }}</span>
+                                        {% endif %}
+                                        </td>
+
+                                    {% endfor %}
+                                    <td>{{ d.1 }}</td>
+
+                                    <td>{{ d.0 }}</td>
+                                    <td style="{% if d.5 == 'Fail' %}color:red; font-weight: 500;{% endif %}">
+                                        {{ d.5 }} </td>
+                                </tr>
+
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {#                <a href="{% url 'exam-result-pdf' %}" class="btn btn-sm btn-secondary" target="_blank">get pdf</a>#}
+            </div>
+        </div>
+     <div class="row">
+            <div class="col-md-12">
+                <h4>Wing: {{ navy.2 }}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">School</th>
+                        <th scope="col">Name</th>
+                        {% for subject in navy.1 %}
+                            <th scope="col">{{ subject.0 }} <br>
+                                <span class="small text-muted">Max Marks: {{ subject.1 }} <br>
+                        Pass Marks: {{ subject.2 }}</span></th>
+                        {% endfor %}
+                        <th scope="col">Total Marks</th>
+
+                        <th scope="col">Marks Obtained</th>
+                        <th scope="col">Result</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for k, v in navy.0.items %}
+                        {% for a, b in v.items %}
+                            {% for c, d in b.items %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ c.school }}</td>
+                                    <td><a href="{% url 'detailed-result' c.id %}">{{ c.first_name }} {{ c.sec_name }}</a></td>
+                                    {% for item in d.4 %}
+                                        <td>
+                                            Mks obtained: {{ item.3 }} <br>Result: {% if item.4 == 'Pass' %}
+                                            <span style="background-color: lightgreen">{{ item.4 }}</span>
+                                        {% else %}
+                                            <span style="background-color: lightcoral;">{{ item.4 }}</span>
+                                        {% endif %}
+                                        </td>
+
+                                    {% endfor %}
+                                    <td>{{ d.1 }}</td>
+
+                                    <td>{{ d.0 }}</td>
+                                    <td style="{% if d.5 == 'Fail' %}color:red; font-weight: 500;{% endif %}">
+                                        {{ d.5 }} </td>
+                                </tr>
+
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {#                <a href="{% url 'exam-result-pdf' %}" class="btn btn-sm btn-secondary" target="_blank">get pdf</a>#}
+            </div>
+        </div>
+{#    AF #}
+         <div class="row">
+            <div class="col-md-12">
+                <h4>Wing: {{ af.2 }}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">School</th>
+                        <th scope="col">Name</th>
+                        {% for subject in af.1 %}
+                            <th scope="col">{{ subject.0 }} <br>
+                                <span class="small text-muted">Max Marks: {{ subject.1 }} <br>
+                        Pass Marks: {{ subject.2 }}</span></th>
+                        {% endfor %}
+                        <th scope="col">Total Marks</th>
+
+                        <th scope="col">Marks Obtained</th>
+                        <th scope="col">Result</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for k, v in af.0.items %}
+                        {% for a, b in v.items %}
+                            {% for c, d in b.items %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ c.school }}</td>
+                                    <td><a href="{% url 'detailed-result' c.id %}">{{ c.first_name }} {{ c.sec_name }}</a></td>
+                                    {% for item in d.4 %}
+                                        <td>
+                                            Mks obtained: {{ item.3 }} <br>Result: {% if item.4 == 'Pass' %}
+                                            <span style="background-color: lightgreen">{{ item.4 }}</span>
+                                        {% else %}
+                                            <span style="background-color: lightcoral;">{{ item.4 }}</span>
+                                        {% endif %}
+                                        </td>
+
+                                    {% endfor %}
+                                    <td>{{ d.1 }}</td>
+
+                                    <td>{{ d.0 }}</td>
+                                    <td style="{% if d.5 == 'Fail' %}color:red; font-weight: 500;{% endif %}">
+                                        {{ d.5 }} </td>
+                                </tr>
+
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {#                <a href="{% url 'exam-result-pdf' %}" class="btn btn-sm btn-secondary" target="_blank">get pdf</a>#}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

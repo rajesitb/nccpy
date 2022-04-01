@@ -1,0 +1,217 @@
+{% extends 'online_exam/base.html' %}
+{% load static %}
+{% block extrahead %}
+
+    <style>
+        header h1 {
+            text-align: center;
+
+            text-transform: uppercase;
+            margin-top: 20px;
+            background-color: #4d4d4d;
+            color: #cccccc;
+            padding: 20px;
+        }
+
+        #Button1 {
+
+            margin-top: 50%;
+        }
+
+        .modal-dialog {
+            max-width: 100% !important;
+            margin-left: 100px;
+            margin-right: 100px;
+        }
+        @media screen and (max-width: 700px){
+            .modal-dialog {
+
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+            .modal-title{
+                font-size: 1rem;
+            }
+            .modal-header h4{
+                font-size: 1rem;
+            }
+
+        }
+
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" id="goFS" style="min-height: 80vh">
+        <header>
+            <h1><img src="{% static  'img/logo1.png' %}" height="50" alt="">
+                ncc c cert online exam
+            </h1>
+        </header>
+
+        {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                    <li class="{{ message.tags }} bg-danger text-white">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="row" id="instructions">
+            <div class="col-md-12">
+                <ul class="list-unstyled fa-ul"><h3>Read these instructions carefully</h3>
+                    <li><span class="fa-li"><i class="fas fa-check-square green-text"></i></span>
+                        The "Launch Exam Paper" button below will be activated only during the block exam time which
+                        has been mailed to you.
+                    </li>
+                    <li><span class="fa-li"><i class="fas fa-check-square green-text"></i></span>First log in to join
+                        the
+                        Google meet where your invigilator will monitor you during the conduct of
+                        your exam.
+                        Once the button below is active, you can click it to launch your question paper. Make sure that
+                        you have
+                        uninterrupted internet during the exam period.
+                    </li>
+                    <li><span class="fa-li"><i class="fas fa-check-square green-text"></i></span>
+                        After launching your exam, DO NOT PRESS F5, back or escape button of your keyboard.
+                        Doing so will log you out from the exam.
+                    </li>
+                    <li><span class="fa-li"><i class="fas fa-check-square green-text"></i></span>
+                        Procedure to answer the questions:
+                        <ul class="list-unstyled fa-ul">
+                            <li><span class="fa-li"><i class="fas fa-check-square blue-text"></i></span>
+                                All subjects are listed on the Tabs. Clicking on a Tab will open the First
+                                Question of that subject.
+                            </li>
+                            <li><span class="fa-li"><i class="fas fa-check-square blue-text"></i></span>
+                                All questions are multiple choice questions. Each question has
+                                Four options.
+                            </li>
+                            <li><span class="fa-li"><i class="fas fa-check-square blue-text"></i></span>
+                                Click on the answer you feel is correct. The Submit button will now get
+                                activated.
+                            </li>
+                            <li><span class="fa-li"><i class="fas fa-check-square blue-text"></i></span>
+                                BE SURE OF YOUR ANSWER. Click on the submit button. YOU CAN NOT REVIEW YOUR SUBMISSION.
+                            </li>
+                            <li><span class="fa-li text-uppercase"><i class="fas fa-check-square blue-text"></i></span>
+                                Wait till you receive a pop up message from the system. Close the pop up
+                            </li>
+                            <li><span class="fa-li text-uppercase"><i class="fas fa-check-square blue-text"></i></span>
+                                Click on the "next question" link only after that
+                            </li>
+                            <li><span class="fa-li text-uppercase"><i class="fas fa-check-square blue-text"></i></span>
+                                You will be presented with the next question of the subject, if the question you just
+                                answered
+                                was not the last question of the subject.
+                            </li>
+
+                            <li><span class="fa-li text-uppercase"><i class="fas fa-check-square blue-text"></i></span>
+                                If you have reached the last question of a subject, click on the next subject to open
+                                its First
+                                question or the last unanswered question. Start answering following the same steps as
+                                above.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><span class="fa-li"><i class="fas fa-check-square green-text"></i></span>
+                        You can click the Close button any time to complete your exam
+                    </li>
+                    <li><span class="fa-li"><i class="fas fa-check-square green-text"></i></span>
+                        The timer on top of the page displays the remaining time in "Min : Sec" for your exam to
+                        complete. Once the timer reaches "00 : 00" , You will be auto logged out from the
+                        exam.
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Button trigger modal -->
+
+            <button type="button" id="start-button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#staticBackdrop">
+                Launch Exam Paper
+            </button>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog " style="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">C Cert Exam: Army <br>
+                            Cadet: Sample Cadet <br> Institute: Sample Cadet College {% include 'online_exam/first_frame_sample.html' %}</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            {% include 'online_exam/exam_tabs_sample.html' %}
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger close-btn">Exit from exam</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('#staticBackdrop').on('show.bs.modal', function () {
+        $('#instructions').hide();
+    });
+        window.addEventListener('contextmenu', function (e) {
+            alert('Right click prevented');
+            e.preventDefault();
+        }, false);
+        {#window.onbeforeunload = function() {#}
+        {##}
+        {# return "There are unsaved changes. Leave now?";#}
+        //};
+        $('.modal-content').on('contextmenu', function (e) {
+            alert('Right click prevented');
+            e.preventDefault();
+            location.href = location.origin + `/student-exam-finished/`;
+        });
+          $(document).keydown(function (event) {
+              if (event.keyCode == 123) {
+                  return false;
+               } else if ((event.ctrlKey && event.shiftKey && event.keyCode == 73) || (event.ctrlKey && event.shiftKey && event.keyCode == 74)) {
+                  alert('prevented');
+                  location.href = location.origin + `/student-exam-finished/`;
+                  return false;
+               }
+           });
+        $('#staticBackdrop').on('show.bs.modal', function () {
+            $('#start-button').hide();
+            startTimer(fiveMinutes, display);
+        });
+
+        function disableF5(e) {
+            if ((e.which || e.keyCode) == 116) e.preventDefault();
+        }
+
+        $(document).on("keydown", disableF5);
+
+        //check for Navigation Timing API support
+        {#if (window.performance) {#}
+        {#    console.info("window.performance works fine on this browser");#}
+        //}
+        {#console.info(performance.navigation.type);#}
+
+        {#if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {#}
+        {#    console.info("This page is reloaded. logout user");#}
+        //} else {
+            {#console.info("This page is not reloaded");#}
+        //}
+
+        $('.close-btn').click(function () {
+            confirm('You are about to exit the Exam! Are you sure')?  location.href = location.origin + '/student-exam-finished/': false;
+
+        })
+    </script>
+{% endblock jquery %}

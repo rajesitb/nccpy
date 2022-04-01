@@ -1,0 +1,81 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+    <!-- MDBootstrap Datatables  -->
+    <link href="{% static 'css/addons/datatables.min.css' %}" rel="stylesheet">
+
+    <style>
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center mt-5 mb-5"><img src="{% static 'img/ncc_logo.png' %}" height="50" alt="logo"> NCC
+                    C Cert Exam Results: Summary</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <table id="myTable" class="table table-striped mb-5 border table-responsive-lg">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">Bn</th>
+                        <th scope="col">School</th>
+                        <th scope="col">Cadet</th>
+                        <th scope="col">Total Marks</th>
+                        <th scope="col">Marks Obtained</th>
+                        <th scope="col">Percentage</th>
+                        <th scope="col">Result</th>
+                        <th scope="col">Position</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in summary %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.user.user_bn.first.battalion }}</td>
+                            <td>{{ item.school.school }}</td>
+                            <td>{{ item.cadet.first_name }} {{ item.cadet.sec_name }}</td>
+                            <td>{{ item.total_marks }}</td>
+                            <td>{{ item.marks_obtained }}</td>
+                            <td>{{ item.percentage }}</td>
+                            <td style="{% if item.result == 'Fail' %} color: red; font-weight: 600{% endif %}">{{ item.result }}</td>
+                            <td>{{ item.position }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block jquery %}
+    <!-- MDBootstrap Datatables  -->
+    <script type="text/javascript" src="{% static 'js/addons/datatables.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "nccpy"
+version = "0.1.0"
+description = ""
+authors = ["rajesitb <56825534+rajesitb@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+dj-database-url = "0.5.0"
+django-crispy-forms = "1.12.0"
+django-widget-tweaks = "1.4.8"
+Django = "3.2.12"
+gunicorn = "^20.1.0"
+weasyprint = "52.5"
+whitenoise = {extras = ["brotli"], version = "^6.0.0"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

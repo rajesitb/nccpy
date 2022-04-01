@@ -1,0 +1,173 @@
+{% extends 'online_exam/exam_base.html' %}
+{% load static %}
+{% block extrahead %}
+    <style>
+        .carousel-control-next, .carousel-control-prev {
+            position: absolute;
+            bottom: -50px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: baseline;
+            -ms-flex-align: baseline;
+
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            width: 15%;
+            color: #fff;
+            text-align: center;
+            align-items: flex-end;
+            opacity: .5;
+        }
+
+        #top-tab {
+            min-height: 17vh;
+        }
+
+        @media screen and (max-width: 700px) {
+            #top-tab {
+                min-height: 21vh;
+            }
+        }
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div id="top-tab" class="card-body position-relative">
+                        <ul class="nav nav-pills mb-3 position-absolute " role="tablist" style="bottom: 0">
+
+                            {% for info in army_questions.2 %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if forloop.first %}active{% endif %}"
+                                       id="pills-{{ info }}-tab"
+                                       role="tab" data-toggle="pill" href="#pills-{{ forloop.counter }}"
+                                    >{{ info }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content pt-2 pl-1" id="pills-tabContent">
+                    {% for info in army_questions.2 %}
+                        <div class="tab-pane fade show {% if forloop.first %}active{% endif %}"
+                             id="pills-{{ forloop.counter }}"
+                             role="tabpanel"
+                        >
+                            <div class="small text-muted mt-5 mb-5">
+                                {% for k, v in army_questions.0.items %}
+                                    {% if k == info %}
+
+                                        <div id="carouselExamControls_{{ forloop.counter }}"
+                                             class="carousel slide mt-5 ml-5" data-interval="false"
+                                             data-wrap="false">
+                                            <div class="carousel-inner">
+                                                {% for key, val in v.items %}
+
+                                                    <div data-id="{{ forloop.counter }}"
+                                                         class=" carousel-item {% if forloop.first %}active{% endif %}"
+                                                         style="min-height: 300px">
+                                                        <p class="mb-5"
+                                                           style="background-color: #999; color: white; padding: 10px 30px; margin-bottom: 50px">
+                                                            Question No <span
+                                                                id="counter">{{ forloop.counter }}</span> of
+                                                            total {{ v.items|length }} question{{ v.items|pluralize }}
+                                                        </p>
+
+                                                        <h5 class="mt-5">Question No {{ forloop.counter }}: <span
+                                                                class="ml-5">{{ key.question }}</span></h5>
+                                                        {% for option in val.0 %}
+                                                            <p class="ml-5"><input type="radio"
+                                                                                   id="id_{{ key.id }}_{{ forloop.counter }}"
+                                                                                   name="{{ key.id }} "
+                                                                                   data-question="{{ key.id }}"
+                                                                                   value="{{ option.1 }}"> <label
+                                                                    for="id_{{ key.id }}_{{ forloop.counter }}">{{ option.0 }}</label>
+                                                            </p>
+                                                        {% endfor %}
+                                                        <p><input data-id="{{ key.id }}" type="button" value="submit"
+                                                                  class="btn btn-secondary ans-btn"></p>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        <div style="float: right">
+                                            <a class="text-dark"
+                                               href="#carouselExamControls_{{ forloop.counter }}"
+                                               role="button" data-length="{{ v|length }}"
+                                               data-slide="next">
+                                                <span class="carousel-control-next-icon bg-dark"></span>
+                                                <span class="ml-2">Next Question</span>
+                                            </a>
+                                        </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+{% endblock %}
+{% block jquery %}
+    <script>
+        let counter = 1;
+        $('a.text-dark').click(function (e) {
+            let clicked = $(this);
+            let data_length = clicked.data('length');
+            let href = clicked.attr('href');
+
+            console.log(data_length, counter);
+            if (counter === data_length) {
+                clicked.hide();
+                counter = 1;
+            } else {
+                counter++;
+            }
+        });
+
+        $('.carousel').carousel({
+            interval: false,
+
+        });
+
+        $('.ans-btn').each(function () {
+            $(this).prop({disabled: true})
+        });
+        $('input[type=radio]').click(function () {
+            let input = $(this);
+            let key = input.attr('name');
+            let btn;
+            $('input[type=button]').each(function () {
+
+                if ($(this).data('id') === parseInt(key)) {
+                    $(this).prop({disabled: false});
+                    btn = $(this)
+                }
+
+            });
+            let val = input.val();
+            let ques = input.data('question');
+            let cadet = '{{ army_questions.3.id }}';
+            btn.click(function () {
+                btn.val(`recorded`);
+                $.post({% url 'submit-student-answer' %}, {val, ques, cadet}, function (data) {
+                    if (data['response'] === 'failure') {
+                        location.href = location.origin + `/student-exam-finished/`
+                    } else {
+                        alert(`response ${data['response']}`);
+                        btn.prop({hidden: true})
+                    }
+                })
+            })
+
+        })
+    </script>
+{% endblock jquery %}

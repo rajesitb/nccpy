@@ -1,0 +1,53 @@
+
+{% load static %}
+{% block extrahead %}
+    <style>
+    h4 span{
+        border: 2px solid black;
+        padding: 10px;
+    }
+    h4{
+        float: right;
+    }
+    @media screen and (max-width: 900px) {
+         h4 span{
+
+             margin-top: 30px;
+             padding: 0;
+
+    }
+    }
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <h4 >Time remaining: <span class="ml-5" id="time"></span></h4>
+{% endblock %}
+{% block jquery %}
+    <!-- JQuery -->
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script>
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            setInterval(function () {
+
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    {#timer = duration;#}
+                    location.href = location.origin + '/student-exam-finished/'
+                }
+            }, 1000);
+        }
+
+        let fiveMinutes = 300;
+        let display = document.querySelector('#time');
+
+    </script>
+
+{% endblock jquery %}

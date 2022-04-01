@@ -1,0 +1,86 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% block extrahead %}
+    <style>
+
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 80vh">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center">Wing: {{ army_questions.1 }}</h1>
+                <div class="row">
+                    <div class="col-md-6 offset-md-3 bg-light">
+                        {% for k, v in army_questions.0.items %}
+                            <h4 class="text-center">Subject: <span class="ml-5">{{ k }}</span></h4>
+
+                            {% for key, val in v.items %}
+                                <h5>Question No: {{ forloop.counter }}<span class="ml-5">{{ key.question }}</span></h5>
+                                {% for option in val.0 %}
+                                    <p class="ml-5"><input type="radio" name="{{ forloop.parentloop.counter }}" value="{{ option.1|safe }}"
+                                                           id="id_{{ option.1 }}">
+                                        <label for="id_{{ option.1 }}">{{ option.0 }}</label></p>
+                                {% endfor %}
+                                <p>Answer: {{ val.1 }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {#    navy#}{% if navy_questions %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Wing: {{ navy_questions.1 }}</h1>
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3 bg-light">
+                            {% for k, v in navy_questions.0.items %}
+                                <h4 class="text-center">Subject: <span class="ml-5">{{ k }}</span></h4>
+
+                                {% for key, val in v.items %}
+                                    <h5>Question No: {{ forloop.counter }}<span class="ml-5">{{ key.question }}</span>
+                                    </h5>
+                                    {% for num, option in val.0.items %}
+                                        <p class="ml-5"><input type="radio" name="{{ key.question }}"
+                                                               value="{{ option.0 }}" id="id_{{ num }}">
+                                            <label for="id_{{ num }}">{{ option.0 }}</label></p>
+                                    {% endfor %}
+                                    <p>Answer: {{ val.1 }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endif %}
+        {#    af#}{% if af_questions %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Wing: {{ af_questions.1 }}</h1>
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3 bg-light">
+                            {% for k, v in af_questions.0.items %}
+                                <h4 class="text-center">Subject: <span class="ml-5">{{ k }}</span></h4>
+
+                                {% for key, val in v.items %}
+                                    <h5>Question No: {{ forloop.counter }}<span class="ml-5">{{ key.question }}</span>
+                                    </h5>
+                                    {% for num, option in val.0.items %}
+                                        <p class="ml-5"><input type="radio" name="{{ key.question }}"
+                                                               value="{{ option.0 }}" id="id_{{ num }}">
+                                            <label for="id_{{ num }}">{{ option.0 }}</label></p>
+                                    {% endfor %}
+                                    <p>Answer: {{ val.1 }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

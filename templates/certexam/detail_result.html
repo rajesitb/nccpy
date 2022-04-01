@@ -1,0 +1,166 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mt-5 mb-5"><img src="{% static 'img/ncc_logo.png' %}" height="50" alt="logo"> NCC C Cert Exam Results</h1>
+            <h4 class="text-center grey-text">Cadet {{ cadet.first_name|title }} {{ cadet.sec_name|title }}: {{ cadet.school|title }}</h4>
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-md-12">
+
+
+                <table class="table table-striped mb-5 border">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">#</th>
+
+                        <th scope="col">Subject</th>
+                        <th scope="col">Question No</th>
+                        <th scope="col">Answer</th>
+                        <th scope="col">Student Answer</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Marks</th>
+                        <th scope="col">Marks Obtained</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                                      {% for result in results %}
+{% for item in result.1 %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ item.subject }}</td>
+                            <td class="question" style="cursor: pointer">{{ item.question }}</td>
+                            <td class="correct-ans" style="cursor: pointer" data-question="{{ item.question }}">{{ item.correct_answer }}</td>
+                            <td class="student-ans" style="cursor: pointer" data-question="{{ item.question }}">{{ item.student_answer }}</td>
+                            <td>{{ item.score }}</td>
+                            <td>{{ result.0 }}</td>
+{#    to multiply {% widthratio A 1 B %}  for A/B: {% widthratio A B 1 %}#}
+                            <td>{% widthratio item.score 1 result.0 %}</td>
+                            <td style="{% if v.3 == 'failed' %}color:red; font-weight: 500;{% endif %}">{{ v.3 }}</td>
+
+{% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            <p>Total Marks: {{ total_score }}</p>
+            </div>
+        </div>
+    </div>
+        <!-- questionModal -->
+<div class="modal fade" id="questionModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form action="" method="post">{% csrf_token %}
+      <div class="modal-body">
+          <p id="show_question"></p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+            <!-- c_ansModal -->
+<div class="modal fade" id="c_ansModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Correct Answer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+          <p id="show_c_ans"></p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+            <!-- st_answerModal -->
+<div class="modal fade" id="st_answerModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Student Answer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+          <p id="show_st_answer"></p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block jquery %}
+    <script>
+    $('.question').click(function () {
+        let question = $(this).text();
+        $.post({% url 'get-question' %}, {question}, function (data) {
+            let ques = data['response'];
+            $('#show_question').text(ques);
+            $('#questionModal').modal('show');
+
+        })
+    });
+
+        $('.correct-ans').click(function () {
+        let correct_ans = $(this).text();
+        let question = $(this).data('question');
+        $.post({% url 'get-correct-ans' %}, {correct_ans, question}, function (data) {
+            let c_ans = data['response'];
+            console.log(c_ans, 'recd ans')
+            $('#show_c_ans').text(c_ans);
+            $('#c_ansModal').modal('show');
+
+        })
+    });
+    $('.student-ans').click(function () {
+        let st_answer = $(this).text();
+        let question = $(this).data('question');
+        console.log(st_answer, question)
+        $.post({% url 'get-student-ans' %}, {st_answer, question}, function (data) {
+            let st_answer = data['response'];
+            $('#show_st_answer').text(st_answer);
+            $('#st_answerModal').modal('show');
+
+        })
+    })
+    </script>
+{% endblock jquery %}

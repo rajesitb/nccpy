@@ -1,0 +1,141 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+        <!-- MDBootstrap Datatables  -->
+    <link href="{% static 'css/addons/datatables.min.css' %}" rel="stylesheet">
+    <style>
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_asc_disabled:before,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:before {
+            bottom: .5em;
+        }
+        .email, .mobile{
+           filter: blur(2px);
+        }
+    </style>
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+        <div class="row">
+            <div class="col-md-12 ">
+                <h1 class="text-center mb-5">NCC C Cert Exam Cadets List: {{ object_list.0.unit }}</h1>
+                <div class="row">
+                    <div class="col-md-3 mb-5">
+                        <form action="" method="post" id="sort-school-form">
+                            {% csrf_token %}
+                            <label for="id_school_select">Sort by School</label>
+                            <select name="school" id="id_school_select" class="form-control">
+                                {% for item in schools %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <div >
+                    <table id="myTable" class="table table-striped mb-5 border">
+                        <thead>
+                        <tr>
+
+                            <th scope="col">Name</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">School</th>
+                            <th scope="col">NCC Number</th>
+                            <th scope="col">Wing</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Mobile no</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for foo in object_list %}
+                            <tr>
+
+                                <td><a href="{% url 'update-cadet' foo.id %}"
+                                       style="font-weight: 600; text-decoration: #0b51c5">{{ foo.first_name|title }} {{ foo.sec_name|title }}
+                                    <i class="bi bi-arrow-right"></i></a>
+                                    <a href="" data-toggle="modal"
+                                       data-id="{{ foo.id }}"
+                                       data-target="#removeModal">
+                                        <i class="float-right bi bi-x-octagon-fill text-danger"></i>
+                                    </a> </td>
+                                <td>{{ foo.gender }}</td>
+                                <td>{{ foo.age }}</td>
+                                <td>{{ foo.school }}</td>
+                                <td >{{ foo.number }}</td>
+                                <td>{{ foo.wing }}</td>
+                                <td class="email">{{ foo.email }}</td>
+                                <td class="mobile">{{ foo.mobile }}</td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- removeModal -->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Remove Cadet</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post">{% csrf_token %}
+                    <div class="modal-body">
+                        <p>Are your sure ?</p>
+                        <p>All connected records will be deleted too!</p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="id_remove_cadet" class="btn btn-danger">Remove</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+        <!-- removeModal -->
+
+{% endblock content %}
+{% block jquery %}
+        <!-- MDBootstrap Datatables  -->
+    <script type="text/javascript" src="{% static 'js/addons/datatables.min.js' %}"></script>
+    <script>
+{#    remove blur#}
+$('.email, .mobile').mouseenter(function (){
+    $(this).css({filter: 'blur(0)'})
+}).mouseleave(function () {
+    $(this).css({filter: 'blur(2px)'})
+});
+{#    remove#}
+        $('#removeModal').on('show.bs.modal', function (e) {
+            let data = e.relatedTarget.dataset['id'];
+            $('#id_remove_cadet').click(function () {
+                $.post({% url 'remove-cadet' %}, {data}, function () {
+                    location.reload();
+                })
+            })
+        });
+        $('#id_school_select').change(function (data) {
+            $('#sort-school-form').submit()
+        });
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+{% endblock jquery %}

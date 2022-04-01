@@ -1,0 +1,25 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+        <div class="row">
+            <div class="card col-md-6  offset-md-3 mt-5">
+                <div class="card-header text-center">
+                    View Exam Results
+                </div>
+                <div class="card-body">
+                    <div class="">
+                        <h4><a href="{% url 'wing-exam-result' 'Army' %}">Army Wing <i class="fa fa-angle-right"></i></a></h4>
+                        <h4><a href="{% url 'wing-exam-result' 'Navy' %}">Naval Wing <i class="fa fa-angle-right"></i></a></h4>
+                        <h4><a href="{% url 'wing-exam-result' 'AF' %}">AF Wing <i class="fa fa-angle-right"></i></a></h4>
+                        <h4><a href="{% url 'view-exam-result' %}">All Wings <i class="fa fa-angle-right"></i></a></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

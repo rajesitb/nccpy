@@ -1,0 +1,41 @@
+{% extends 'certexam/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block extrahead %}
+
+{% endblock extrahead %}
+{% block content %}
+    <div class="container-fluid" style="min-height: 70vh">
+
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="text-center mb-5">Add Cadet</h1>
+                <h6>Add using <a href="{% url 'form-as-list' %}" class="btn btn-sm btn-primary">row form</a></h6>
+                <p class="mb-5">Add cadet who is affected for online NCC C Cert Exam</p>
+                <form action="" method="post">
+                    {% csrf_token %}
+                                        {{ form|crispy }}
+
+
+                    <div style="text-align: center">
+                        <input type="submit" id="submit_form" value="save & exit" class="btn btn-secondary"
+                               style="border-radius: 10px">
+                        <input type="button" id="submit_and_add" value="save & add another" class="btn btn-primary"
+                               style="border-radius: 10px">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block jquery %}
+    <script>
+        $('#id_dob').attr('type', 'date');
+        $('#submit_and_add').click(function (data) {
+            $('form').attr('action', {% url 'submit-and-add-more' %});
+            $('form').submit();
+        })
+
+    </script>
+{% endblock jquery %}
